@@ -35,7 +35,10 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(pico_weather_watch pico_weather_watch.c )
+add_executable(pico_weather_watch
+    pico_weather_watch.c
+    dht11.c
+)
 
 pico_set_program_name(pico_weather_watch "pico_weather_watch")
 pico_set_program_version(pico_weather_watch "0.1")
