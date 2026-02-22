@@ -57,3 +57,5 @@ dkms.conf
 build/
 
 .DS_Store
+
+.cache/

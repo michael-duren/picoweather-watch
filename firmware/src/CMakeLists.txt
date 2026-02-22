@@ -28,36 +28,36 @@ set(PICO_BOARD pico_w CACHE STRING "Board type")
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
-project(PicoWeatherWatch C CXX ASM)
+project(pico_weather_watch C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(PicoWeatherWatch PicoWeatherWatch.c )
+add_executable(pico_weather_watch pico_weather_watch.c )
 
-pico_set_program_name(PicoWeatherWatch "PicoWeatherWatch")
-pico_set_program_version(PicoWeatherWatch "0.1")
+pico_set_program_name(pico_weather_watch "pico_weather_watch")
+pico_set_program_version(pico_weather_watch "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB
-pico_enable_stdio_uart(PicoWeatherWatch 0)
-pico_enable_stdio_usb(PicoWeatherWatch 1)
+pico_enable_stdio_uart(pico_weather_watch 0)
+pico_enable_stdio_usb(pico_weather_watch 1)
 
 # Add the standard library to the build
-target_link_libraries(PicoWeatherWatch
+target_link_libraries(pico_weather_watch
         pico_stdlib)
 
 # Add the standard include files to the build
-target_include_directories(PicoWeatherWatch PRIVATE
+target_include_directories(pico_weather_watch PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
 )
 
 # Add any user requested libraries
-target_link_libraries(PicoWeatherWatch 
+target_link_libraries(pico_weather_watch
         hardware_timer
-        
+        pico_cyw43_arch_none
         )
 
-pico_add_extra_outputs(PicoWeatherWatch)
+pico_add_extra_outputs(pico_weather_watch)
 
