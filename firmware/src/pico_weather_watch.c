@@ -1,18 +1,11 @@
+#include <hardware/gpio.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "dht11.h"
-#include "hardware/timer.h"
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 
-int64_t alarm_callback(alarm_id_t id, void* user_data) {
-    // Put your timeout handler code in here
-    return 0;
-}
-
-#define DHT_PIN 15
-#define MAX_TIMINGS 85
 #define SUCCESS 0
 
 void init() {
@@ -24,6 +17,9 @@ void init() {
         exit(1);
     }
     sleep_ms(2000);
+
+    // init for dht
+    gpio_init(DHT_PIN);
 
     int rc = cyw43_arch_init();
     if (rc != SUCCESS) {
@@ -41,17 +37,21 @@ int main() {
 
     while (true) {
         printf("read from dht\n");
-        dht11_reading result = {.temperature = 0.0, .humidity = 0.0};
-        int rc = read_from_dht(&result);
+        dht11_reading reading;
+        int rc = read_from_dht(&reading);
 
         if (rc != SUCCESS) {
             printf(
                 "unable to read from dht11, error code: %d. turning led off to "
-                "signal failure",
+                "signal failure\n",
                 rc);
             cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
+        } else {
+            printf("reading from dht11: \n");
+            printf("temperature: %f\n", reading.temperature);
+            printf("humidity: %f\n", reading.humidity);
         }
 
-        sleep_ms(1000);
+        sleep_ms(2000);
     }
 }

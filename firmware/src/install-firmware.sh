@@ -8,8 +8,8 @@ make -j4
 cd ..
 
 echo "installing"
-picotool load build/pico_weather_watch.uf2 -f
-picotool reboot
+# Hold BOOTSEL button when plugging in Pico first
+cp build/pico_weather_watch.uf2 /Volumes/RPI-RP2/
 
 echo "connecting to serial output"
 sleep 2
