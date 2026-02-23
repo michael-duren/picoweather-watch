@@ -13,7 +13,7 @@ picotool reboot
 
 echo "connecting to serial output"
 sleep 2
-DEVICE=$(ls /dev/tty.usbmodem* 2>/dev/null | head -1)
+DEVICE=$(find /dev/tty.usbmodem* 2>/dev/null | head -1)
 if [ -z "$DEVICE" ]; then
     echo "no pico found"
     exit 1
