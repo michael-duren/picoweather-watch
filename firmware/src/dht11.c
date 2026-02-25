@@ -69,7 +69,14 @@ int read_from_dht(dht11_reading* result) {
             }
         }
         last = gpio_get(DHT_PIN);
-        if (count == 255) break;
+
+        if (count == 255) {
+            printf(
+                "reached 255 iterations while reading from dht, something "
+                "is wrong\n");
+            break;
+        }
+
         if ((i >= 4) && (i % 2 == 0)) {
             // which of the 5 bytes we're filling
             data[j / 8] <<= 1;
@@ -77,10 +84,13 @@ int read_from_dht(dht11_reading* result) {
             j++;
         }
     }
-    if (data[0] + data[1] + data[2] + data[3] == data[4]) {
-        result->humidity = (float)data[0];
-        result->temperature = (float)data[2];
-        return 0;  // success
+
+    // checksum
+    if (data[0] + data[1] + data[2] + data[3] != data[4]) {
+        return -1;
     }
-    return -1;
+
+    result->humidity = (float)data[0];
+    result->temperature = (float)data[2];
+    return 0;
 }
