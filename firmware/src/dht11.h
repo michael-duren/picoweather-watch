@@ -11,6 +11,6 @@ typedef struct {
 int read_from_dht11(dht11_reading* result);
 
 #define DHT_PIN 15
-#define MAX_TIMINGS 85
+#define MAX_TIMINGS 82
 
 #endif  // !DHT11_H

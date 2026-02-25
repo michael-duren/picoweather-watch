@@ -38,7 +38,7 @@ int main() {
     while (true) {
         printf("read from dht\n");
         dht11_reading reading;
-        int rc = read_from_dht(&reading);
+        int rc = read_from_dht11(&reading);
 
         if (rc != SUCCESS) {
             printf(
