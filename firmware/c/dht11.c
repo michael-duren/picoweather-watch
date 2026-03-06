@@ -2,6 +2,8 @@
 
 #include <hardware/gpio.h>
 #include <stdio.h>
+#define ERR_DHT_READ -1
+#define ERR_DHT_CHECKSUM -2
 
 #include "pico/stdlib.h"
 
@@ -53,6 +55,7 @@ int read_from_dht(dht11_reading* result) {
     uint j = 0;
 
     send_start_signal();
+    int errorCode = 0;
 
     // read dht11 response (5.3) + 40 bits
     for (uint i = 0; i < MAX_TIMINGS; i++) {
@@ -65,6 +68,7 @@ int read_from_dht(dht11_reading* result) {
                 printf(
                     "reached 255 iterations while reading from dht, something "
                     "is wrong\n");
+                errorCode = ERR_DHT_READ;
                 break;
             }
         }
@@ -74,6 +78,7 @@ int read_from_dht(dht11_reading* result) {
             printf(
                 "reached 255 iterations while reading from dht, something "
                 "is wrong\n");
+            errorCode = ERR_DHT_READ;
             break;
         }
 
@@ -87,10 +92,11 @@ int read_from_dht(dht11_reading* result) {
 
     // checksum
     if (data[0] + data[1] + data[2] + data[3] != data[4]) {
-        return -1;
+        return ERR_DHT_CHECKSUM;
     }
 
     result->humidity = (float)data[0];
     result->temperature = (float)data[2];
-    return 0;
+
+    return errorCode;
 }

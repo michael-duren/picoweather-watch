@@ -35,7 +35,7 @@ int main() {
     printf("starting firmware");
     init();
 
-    while (true) {
+    while (1) {
         printf("read from dht\n");
         dht11_reading reading;
         int rc = read_from_dht11(&reading);
