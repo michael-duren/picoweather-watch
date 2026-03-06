@@ -1,4 +1,5 @@
 #include <hardware/gpio.h>
+#include <pico/time.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -29,6 +30,9 @@ void init() {
 
     printf("turning on LED to signal successful initialization");
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
+    sleep_ms(1000);
+    printf("turning off to signifiy end of initialization");
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
 }
 
 int main() {

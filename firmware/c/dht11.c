@@ -49,7 +49,7 @@ void send_start_signal() {
  *
  * @param result Pointer to result struct
  */
-int read_from_dht(dht11_reading* result) {
+int read_from_dht11(dht11_reading* result) {
     int data[5] = {0, 0, 0, 0, 0};
     uint last = 1;
     uint j = 0;
