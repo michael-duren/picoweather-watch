@@ -1,5 +1,6 @@
 #include <hardware/gpio.h>
 #include <pico/time.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -49,11 +50,15 @@ int main() {
                 "unable to read from dht11, error code: %d. turning led off to "
                 "signal failure\n",
                 rc);
+
             cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
         } else {
-            printf("reading from dht11: \n");
-            printf("temperature: %f\n", reading.temperature);
-            printf("humidity: %f\n", reading.humidity);
+            uint8_t packet[4] = {0xAA, (uint8_t)reading.temperature,
+                                 (uint8_t)reading.humidity, 0x55};
+            stdio_put_string((char*)packet, 4, 0, 0);
+            // printf("reading from dht11: \n");
+            // printf("temperature: %f\n", reading.temperature);
+            // printf("humidity: %f\n", reading.humidity);
         }
 
         sleep_ms(2000);
