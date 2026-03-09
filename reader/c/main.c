@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "logger.h"
 
 typedef struct {
     float temperature;
@@ -11,7 +12,5 @@ int* read(dht11_reading* val, int fd) {
 }
 
 int main() {
-    puts("hey buddy");
-
-    return 0;
+    logger_info("hey buddy %s, this is a test", "michael");
 }
