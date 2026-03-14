@@ -1,32 +1,61 @@
 package main
 
 import (
-	"machine"
 	"time"
+
+	"machine"
 
 	"github.com/michael-duren/picoweather-watch/firmware/go/logger"
 	"tinygo.org/x/drivers/dht"
 )
 
 // PICO W GPIO11 -> 15 on board
-const DHT_PIN = machine.GP11
+const DHTPin = machine.GP11
 
-// func init() {
-// 	logger.Log("initializing architecture")
-// 	sensor 
-// }
+const ReadInterval = 2 * time.Second
 
 func main() {
-	logger.Log("hey buddy")
-	led := machine.LED
-	led.Configure(machine.PinConfig{Mode: machine.PinOutput})
-	dht.New(DHT_PIN, dht.DHT11)
+	// allow USB serial to initialize
+	time.Sleep(2 * time.Second)
+
+	logger.Log("initializing picoweather-watch")
+
+	sensor := dht.New(DHTPin, dht.DHT11)
+
+	if err := initSender(); err != nil {
+		logger.Log("sender init failed:", err.Error())
+		panic(err)
+	}
+
+	logger.Log("initialization complete, starting read loop")
 
 	for {
-		led.High()
-		time.Sleep(time.Second / 2)
+		if err := sensor.ReadMeasurements(); err != nil {
+			logger.Log("dht read failed:", err.Error())
+			time.Sleep(ReadInterval)
+			continue
+		}
 
-		led.Low()
-		time.Sleep(time.Second / 2)
+		temp, err := sensor.ReadTemperature()
+		if err != nil {
+			logger.Log("temperature read failed:", err.Error())
+			time.Sleep(ReadInterval)
+			continue
+		}
+
+		humidity, err := sensor.ReadHumidity()
+		if err != nil {
+			logger.Log("humidity read failed:", err.Error())
+			time.Sleep(ReadInterval)
+			continue
+		}
+
+		logger.Log("temp (m°C):", temp, "humidity (m%):", humidity)
+
+		if err := send(temp, humidity); err != nil {
+			logger.Log("send failed:", err.Error())
+		}
+
+		time.Sleep(ReadInterval)
 	}
 }
