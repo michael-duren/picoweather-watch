@@ -1,0 +1,3 @@
+{
+  "buildFlags": ["wifi", "debug", "bluetooth"]
+}

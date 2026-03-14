@@ -10,16 +10,16 @@ flash-usb:
 flash-usb-debug:
 	tinygo flash -target=$(TARGET) -tags=debug .
 
-# WiFi mode - sends data over TCP to configured server
-# Edit wifi_config.go with your SSID/password/server before building
-.PHONY: flash-wifi
-flash-wifi:
-	tinygo flash -target=$(TARGET) -tags=wifi -stack-size=8kb -scheduler=tasks .
+# Bluetooth mode - sends data over BLE to connected devices
+# Edit bluetooth_config.go with your device name/UUIDs before building
+.PHONY: flash-bluetooth
+flash-bluetooth:
+	tinygo flash -target=$(TARGET) -tags=bluetooth -stack-size=8kb -scheduler=tasks .
 
-# WiFi mode with debug logging
-.PHONY: flash-wifi-debug
-flash-wifi-debug:
-	tinygo flash -target=$(TARGET) -tags="wifi debug" -stack-size=8kb -scheduler=tasks .
+# Bluetooth mode with debug logging
+.PHONY: flash-bluetooth-debug
+flash-bluetooth-debug:
+	tinygo flash -target=$(TARGET) -tags="bluetooth debug" -stack-size=8kb -scheduler=tasks .
 
 # Monitor USB serial output
 .PHONY: monitor

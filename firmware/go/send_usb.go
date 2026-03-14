@@ -1,4 +1,4 @@
-//go:build !wifi
+//go:build !bluetooth
 
 package main
 

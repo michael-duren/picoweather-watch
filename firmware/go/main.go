@@ -36,14 +36,14 @@ func main() {
 			continue
 		}
 
-		temp, err := sensor.ReadTemperature()
+		temp, err := sensor.Temperature()
 		if err != nil {
 			logger.Log("temperature read failed:", err.Error())
 			time.Sleep(ReadInterval)
 			continue
 		}
 
-		humidity, err := sensor.ReadHumidity()
+		humidity, err := sensor.Humidity()
 		if err != nil {
 			logger.Log("humidity read failed:", err.Error())
 			time.Sleep(ReadInterval)
@@ -52,7 +52,7 @@ func main() {
 
 		logger.Log("temp (m°C):", temp, "humidity (m%):", humidity)
 
-		if err := send(temp, humidity); err != nil {
+		if err := send(int32(temp), int32(humidity)); err != nil {
 			logger.Log("send failed:", err.Error())
 		}
 
