@@ -1,6 +1,19 @@
 #!/bin/bash
 set -e
 
+DEBUG=false
+
+while getopts "D:" arg; do
+    case $arg in
+    D)
+        DEBUG=true
+        ;;
+    *)
+        echo "Usage is :-D for debug or no flags"
+        ;;
+    esac
+done
+
 echo "building"
 cd build/
 cmake ..

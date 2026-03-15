@@ -52,7 +52,7 @@ func main() {
 
 		logger.Log("temp (m°C):", temp, "humidity (m%):", humidity)
 
-		if err := send(int32(temp), int32(humidity)); err != nil {
+		if err := send(temp, humidity); err != nil {
 			logger.Log("send failed:", err.Error())
 		}
 

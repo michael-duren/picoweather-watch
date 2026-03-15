@@ -2,6 +2,8 @@
 
 #include <hardware/gpio.h>
 #include <stdio.h>
+
+#include "logger.h"
 #define ERR_DHT_READ -1
 #define ERR_DHT_CHECKSUM -2
 
@@ -38,8 +40,8 @@ void send_start_signal() {
     // wait at least 18ms (per doc)
     sleep_ms(30);
 
-    // pull voltage
     set_input();
+
     // waiting 20-40us for dht res
     sleep_us(40);
 }
@@ -65,7 +67,7 @@ int read_from_dht11(dht11_reading* result) {
             sleep_us(1);
             // if nothing changed something went wrong
             if (count == 255) {
-                printf(
+                logger_err(
                     "reached 255 iterations while reading from dht, something "
                     "is wrong\n");
                 errorCode = ERR_DHT_READ;
@@ -73,14 +75,6 @@ int read_from_dht11(dht11_reading* result) {
             }
         }
         last = gpio_get(DHT_PIN);
-
-        if (count == 255) {
-            printf(
-                "reached 255 iterations while reading from dht, something "
-                "is wrong\n");
-            errorCode = ERR_DHT_READ;
-            break;
-        }
 
         if ((i >= 4) && (i % 2 == 0)) {
             // which of the 5 bytes we're filling

@@ -56,9 +56,9 @@ func initSender() error {
 		UUID: svcUUID,
 		Characteristics: []bluetooth.CharacteristicConfig{
 			{
-				UUID:  charUUID,
-				Value: make([]byte, 32),
-				Flags: bluetooth.CharacteristicReadPermission | bluetooth.CharacteristicNotifyPermission,
+				UUID:   charUUID,
+				Value:  make([]byte, 32),
+				Flags:  bluetooth.CharacteristicReadPermission | bluetooth.CharacteristicNotifyPermission,
 				Handle: &dataChar,
 			},
 		},
@@ -87,7 +87,7 @@ func initSender() error {
 
 // send transmits temperature and humidity over Bluetooth.
 // Data is sent as "T:<degrees>:H:<percent>\n" text format.
-func send(temperature, humidity int32) error {
+func send(temperature int16, humidity uint16) error {
 	tempC := temperature / 1000
 	humPct := humidity / 1000
 	msg := "T:" + strconv.Itoa(int(tempC)) + ":H:" + strconv.Itoa(int(humPct)) + "\n"

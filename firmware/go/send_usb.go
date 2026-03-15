@@ -12,7 +12,7 @@ func initSender() error {
 // send writes a framed binary packet over USB serial.
 // Protocol matches the C firmware: {0xAA, temp, humidity, 0x55}
 // where temp is degrees C and humidity is percent RH.
-func send(temperature, humidity int32) error {
+func send(temperature int16, humidity uint16) error {
 	tempByte := byte(temperature / 1000) // millidegrees -> degrees
 	humByte := byte(humidity / 1000)     // millipercent -> percent
 
