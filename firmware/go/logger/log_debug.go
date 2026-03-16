@@ -5,7 +5,11 @@
 package logger
 
 func Log(args ...any) {
-	for _, a := range args {
-		println(a)
+	for i, a := range args {
+		if i > 0 {
+			print(" ")
+		}
+		print(a)
 	}
+	print("\n")
 }

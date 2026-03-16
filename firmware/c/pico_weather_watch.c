@@ -12,17 +12,13 @@
 #define SUCCESS 0
 
 void init() {
-    logger_info("initializing architecture\n");
-    int res = stdio_init_all();
-    if (!res) {
-        logger_err("unable to initialize usb io, error code: %d\n", res);
-        exit(1);
-    }
+    stdio_init_all();
     sleep_ms(2000);
 
     gpio_init(DHT_PIN);
 
     int rc = cyw43_arch_init();
+    sleep_ms(2000);
     if (rc != SUCCESS) {
         logger_err("unable to initialize lwIP stack, error code: %d\n", rc);
         exit(1);
@@ -47,7 +43,7 @@ int main() {
 
         if (rc != SUCCESS) {
             logger_warn("unable to read from dht11, error code: %d\n", rc);
-            cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
+            // cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
         } else {
             uint8_t packet[4] = {0xAA, (uint8_t)reading.temperature,
                                  (uint8_t)reading.humidity, 0x55};
@@ -56,6 +52,6 @@ int main() {
             logger_info("humidity: %f\n", reading.humidity);
         }
 
-        sleep_ms(2000);
+        sleep_ms(3000);
     }
 }

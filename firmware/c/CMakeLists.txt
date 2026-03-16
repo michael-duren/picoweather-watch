@@ -44,6 +44,11 @@ pico_sdk_init()
 
 add_executable(pico_weather_watch pico_weather_watch.c dht11.c)
 
+option(ENABLE_DEBUG_LOGGING "Enable debug logging" OFF)
+if(ENABLE_DEBUG_LOGGING)
+  target_compile_definitions(pico_weather_watch PRIVATE DEBUG)
+endif()
+
 pico_set_program_name(pico_weather_watch "pico_weather_watch")
 pico_set_program_version(pico_weather_watch "0.1")
 

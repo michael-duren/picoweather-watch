@@ -25,9 +25,12 @@ void set_low() {
 }
 
 /**
- * @brief sets high impedence
+ * @brief sets high impedence with pull-up
  */
-void set_input() { gpio_set_dir(DHT_PIN, GPIO_IN); }
+void set_input() {
+    gpio_set_dir(DHT_PIN, GPIO_IN);
+    gpio_pull_up(DHT_PIN);
+}
 
 /**
  * @brief sends start signal (5.2) section of
@@ -36,14 +39,19 @@ void set_input() { gpio_set_dir(DHT_PIN, GPIO_IN); }
 void send_start_signal() {
     // set high to low
     set_high();
+    sleep_us(100);  // stabilize
     set_low();
     // wait at least 18ms (per doc)
-    sleep_ms(30);
+    sleep_ms(20);
 
     set_input();
 
-    // waiting 20-40us for dht res
+    // waiting 20-40us for dht response
     sleep_us(40);
+
+    // Check if DHT11 is responding
+    int pin_state = gpio_get(DHT_PIN);
+    logger_info("after start signal, pin state: %d (should be 0 if DHT11 responding)\n", pin_state);
 }
 
 /**
@@ -80,12 +88,25 @@ int read_from_dht11(dht11_reading* result) {
             // which of the 5 bytes we're filling
             data[j / 8] <<= 1;
             if (count > 16) data[j / 8] |= 1;
+            // Debug first few bits
+            if (j < 16) {
+                logger_info("bit %d: count=%d val=%d\n", j, count, (count > 16) ? 1 : 0);
+            }
             j++;
         }
     }
 
+    // Log raw data bytes
+    logger_info("raw data: [0]=%d [1]=%d [2]=%d [3]=%d [4]=%d\n",
+                data[0], data[1], data[2], data[3], data[4]);
+
     // checksum
-    if (data[0] + data[1] + data[2] + data[3] != data[4]) {
+    uint8_t computed = data[0] + data[1] + data[2] + data[3];
+    uint8_t received = data[4];
+    logger_info("checksum: computed=%d received=%d\n", computed, received);
+
+    if (computed != received) {
+        logger_err("checksum failed!\n");
         return ERR_DHT_CHECKSUM;
     }
 

@@ -12,7 +12,7 @@ import (
 // PICO W GPIO11 -> 15 on board
 const DHTPin = machine.GP11
 
-const ReadInterval = 2 * time.Second
+const ReadInterval = 3 * time.Second
 
 func main() {
 	// allow USB serial to initialize
@@ -30,6 +30,8 @@ func main() {
 	logger.Log("initialization complete, starting read loop")
 
 	for {
+		logger.Log("reading from sensor...")
+
 		if err := sensor.ReadMeasurements(); err != nil {
 			logger.Log("dht read failed:", err.Error())
 			time.Sleep(ReadInterval)
@@ -50,7 +52,13 @@ func main() {
 			continue
 		}
 
-		logger.Log("temp (m°C):", temp, "humidity (m%):", humidity)
+		logger.Log("raw temp (m°C):", temp, "raw humidity (m%):", humidity)
+
+		// Convert to degrees C and percent
+		tempC := temp / 1000
+		humidityPercent := humidity / 1000
+
+		logger.Log("temp (°C):", tempC, "humidity (%):", humidityPercent)
 
 		if err := send(temp, humidity); err != nil {
 			logger.Log("send failed:", err.Error())

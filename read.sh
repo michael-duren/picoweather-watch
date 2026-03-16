@@ -9,4 +9,4 @@ if [ -z "$DEVICE" ]; then
     exit 1
 fi
 echo "found pico at $DEVICE"
-minicom -b 115200 -D "$DEVICE"
+screen "$DEVICE" 115200
