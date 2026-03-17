@@ -51,7 +51,9 @@ void send_start_signal() {
 
     // Check if DHT11 is responding
     int pin_state = gpio_get(DHT_PIN);
-    logger_info("after start signal, pin state: %d (should be 0 if DHT11 responding)\n", pin_state);
+    logger_info(
+        "after start signal, pin state: %d (should be 0 if DHT11 responding)\n",
+        pin_state);
 }
 
 /**
@@ -67,7 +69,7 @@ int read_from_dht11(dht11_reading* result) {
     send_start_signal();
     int errorCode = 0;
 
-    // read dht11 response (5.3) + 40 bits
+    // read dht11 response (5.3) from data sheet + 40 bits
     for (uint i = 0; i < MAX_TIMINGS; i++) {
         uint count = 0;
         while (gpio_get(DHT_PIN) == last) {
@@ -85,22 +87,20 @@ int read_from_dht11(dht11_reading* result) {
         last = gpio_get(DHT_PIN);
 
         if ((i >= 4) && (i % 2 == 0)) {
-            // which of the 5 bytes we're filling
             data[j / 8] <<= 1;
             if (count > 16) data[j / 8] |= 1;
-            // Debug first few bits
+
             if (j < 16) {
-                logger_info("bit %d: count=%d val=%d\n", j, count, (count > 16) ? 1 : 0);
+                logger_info("bit %d: count=%d val=%d\n", j, count,
+                            (count > 16) ? 1 : 0);
             }
             j++;
         }
     }
 
-    // Log raw data bytes
-    logger_info("raw data: [0]=%d [1]=%d [2]=%d [3]=%d [4]=%d\n",
-                data[0], data[1], data[2], data[3], data[4]);
+    logger_info("raw data: [0]=%d [1]=%d [2]=%d [3]=%d [4]=%d\n", data[0],
+                data[1], data[2], data[3], data[4]);
 
-    // checksum
     uint8_t computed = data[0] + data[1] + data[2] + data[3];
     uint8_t received = data[4];
     logger_info("checksum: computed=%d received=%d\n", computed, received);
