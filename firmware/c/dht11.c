@@ -42,7 +42,7 @@ void send_start_signal() {
     sleep_us(100);  // stabilize
     set_low();
     // wait at least 18ms (per doc)
-    sleep_ms(20);
+    sleep_ms(25);
 
     set_input();
 

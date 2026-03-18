@@ -124,6 +124,7 @@ func (wr *WeatherReader) Start(ctx context.Context) error {
 					// Complete frame received
 					if len(frameBuffer) == FrameSize {
 						if frameBuffer[3] == FrameEnd {
+							// update data being
 							wr.processFrame(frameBuffer)
 						} else {
 							wr.logger.Warn("invalid frame end marker", "frame", frameBuffer)

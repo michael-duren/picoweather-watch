@@ -25,7 +25,7 @@ if(EXISTS ${picoVscode})
 endif()
 # ==============================================================================
 set(PICO_BOARD
-    pico_w
+    pico
     CACHE STRING "Board type")
 
 # Pull in Raspberry Pi Pico SDK (must be before project)
@@ -63,7 +63,7 @@ target_link_libraries(pico_weather_watch pico_stdlib)
 target_include_directories(pico_weather_watch PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 
 # Add any user requested libraries
-target_link_libraries(pico_weather_watch hardware_timer pico_cyw43_arch_none)
+target_link_libraries(pico_weather_watch hardware_timer)
 
 # add_custom_command(TARGET pico_weather_watch POST_BUILD COMMAND
 # arm-none-eabi-strip $<TARGET_FILE:pico_weather_watch> )

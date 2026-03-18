@@ -1,4 +1,4 @@
-TARGET = pico-w
+TARGET = pico
 
 # USB mode (default) - sends data over USB serial
 .PHONY: flash-usb

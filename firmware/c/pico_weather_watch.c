@@ -25,6 +25,7 @@ void init() {
     sleep_ms(1000);
     logger_info("turning off to signify end of initialization\n");
     gpio_put(LED_PIN, 0);
+    gpio_init(DHT_PIN);
 }
 
 int main() {
